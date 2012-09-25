@@ -1,7 +1,7 @@
 import vtk
 
 reader = vtk.vtkDICOMImageReader()
-reader.SetDirectoryName('/home/mihai/Desktop/1000_KORAALS1/20110617/00006_POLS_0_5_MM')
+reader.SetDirectoryName('/home/kristin/UVA/SVVR/Coral_data/1000_KORAALS1/20110617/00006_POLS_0_5_MM')
 reader.Update()
 
 imageData = vtk.vtkImageData()
