@@ -8,9 +8,17 @@ imageData = vtk.vtkImageData()
 imageData.DeepCopy(reader.GetOutput())
 
 opacityFunction = vtk.vtkPiecewiseFunction()
-opacityFunction.AddPoint(0, 0.25)
-opacityFunction.AddPoint(1000, 0.75)
+opacityFunction.AddPoint(1000, 0.0)
+opacityFunction.AddPoint(1400, 0.4)
+opacityFunction.AddPoint(1800, 0.0)
+opacityFunction.AddPoint(2000, 0.1)
+opacityFunction.AddPoint(2400, 0.4)
+opacityFunction.AddPoint(2800, 0.0)
 colorFunction = vtk.vtkColorTransferFunction()
+
+colorFunction.AddRGBPoint(1400, 0.0, 1.0, 0.0)
+colorFunction.AddRGBPoint(2000, 1.0, 0.0, 0.0)
+colorFunction.AddRGBPoint(2400, 0.0, 0.0, 1.0)
 
 volumeProperty = vtk.vtkVolumeProperty()
 volumeProperty.SetColor(colorFunction)
@@ -29,7 +37,7 @@ mapper.SetBlendModeToMaximumIntensity()
 volume.SetMapper(mapper)
 
 renderer = vtk.vtkRenderer()
-renderer.SetBackground(1, 0.25, 0.5)
+renderer.SetBackground(0, 0.0, 0.0)
 renderer.AddVolume(volume)
 renderer.ResetCamera()
 
