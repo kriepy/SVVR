@@ -13,19 +13,14 @@ def loadData():
     return reader
 
 def connectivityFilter(polyData):
-    connectivityFilter = vtk.vtkConnectivityFilter()
-    connectivityFilter.setInputConnection(polyData.GetOutputPort())
+    connectivityFilter = vtk.vtkPolyDataConnectivityFilter()
+    connectivityFilter.SetInputConnection(polyData.GetOutputPort())
     connectivityFilter.SetExtractionModeToAllRegions()
-    connectivityFilter.ColorRegionsOn()
+    #connectivityFilter.ColorRegionsOn()
     connectivityFilter.Update()
+    print ("number of regions extracted: " + str(connectivityFilter.GetNumberOfExtractedRegions()))
 
     return connectivityFilter
-
-def getMassProperties(triangles):
-    mass = vtk.vtkMassProperties()
-    mass.SetInputConnection(triangles.GetOutputPort())
-    
-    return mass.GetVolume(), mass.GetSurfaceArea()
 
 # Generate the Isosurface using pre-specified threshold
 def generateIsosurface(reader):
@@ -33,12 +28,6 @@ def generateIsosurface(reader):
     isoSurface.SetInputConnection(reader.GetOutputPort())
     isoSurface.GenerateValues(1, threshold)
     return isoSurface
-
-def dataCleanup(surface):
-    clean_data = vtk.vtkCleanPolyData()
-    clean_data.SetInputConnection(surface.GetOutputPort())
-    
-    return clean_data
 
 def createGeometry(surface):
     mapper = vtk.vtkPolyDataMapper()
@@ -76,17 +65,12 @@ def runVisualization(actor):
 def runMain():
     reader = loadData()
     isoSurface = generateIsosurface(reader)
-    #connected = connectivityFilter(isoSurface)
-    cleanSurface = dataCleanup(isoSurface)
-    triangSurface = triangulateData(cleanSurface)
+    connected = connectivityFilter(isoSurface)
+    triangSurface = triangulateData(connected)
     actor = createGeometry(triangSurface)
 
-    [volume, surface] = getMassProperties(triangSurface)
-    
-    print "Volume:", volume
-    print "Surface:", surface
-
     runVisualization(actor)
+
     
 if __name__ == "__main__":
     runMain()
