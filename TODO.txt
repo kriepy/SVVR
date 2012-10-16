@@ -1,0 +1,5 @@
+until friday:
+
+-normalize the histograms
+-get percentual difference between measuered and calculated volumes
+
