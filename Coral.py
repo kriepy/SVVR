@@ -7,6 +7,11 @@ reader.Update()
 imageData = vtk.vtkImageData()
 imageData.DeepCopy(reader.GetOutput())
 
+extractor = vtk.vtkExtractVOI()
+extractor.SetInput(imageData)
+extractor.SetVOI(0,300,0,300,0,300)
+extractor.GetVOI()
+
 opacityFunction = vtk.vtkPiecewiseFunction()
 opacityFunction.AddPoint(1000, 0.0)
 opacityFunction.AddPoint(1400, 0.4)
@@ -30,7 +35,7 @@ volume = vtk.vtkVolume()
 volume.SetProperty(volumeProperty)
 
 mapper = vtk.vtkFixedPointVolumeRayCastMapper()
-mapper.SetInput(imageData)
+mapper.SetInputConnection(extractor.GetOutputPort())
 mapper.SetSampleDistance(1.0)
 mapper.SetBlendModeToMaximumIntensity()
 
