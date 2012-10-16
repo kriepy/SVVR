@@ -1,7 +1,9 @@
 import vtk
+from Histogram import Histogram
+from Volume import Volume
 
-file_path = '/media/Documents/UvA/Scientific Visualization and Virtual Reality/S1_CroppedSamples/S1_480.vti'
-threshold = [-700, 1800]
+file_path = '/media/Documents/UvA/Scientific Visualization and Virtual Reality/S1_CroppedSamples/S1_482.vti'
+threshold = [0, 0]
 
 def loadData():
     reader = vtk.vtkXMLImageDataReader()
@@ -9,68 +11,48 @@ def loadData():
     reader.Update()
 
     return reader
-    
-def generateIsosurface(reader):
+
+def createGeometry(reader, threshold = 0):
     isoSurface = vtk.vtkContourFilter()
     isoSurface.SetInputConnection(reader.GetOutputPort())
-    isoSurface.GenerateValues(3, threshold)
-    
-    return isoSurface
+    isoSurface.SetValue(0, threshold)
 
-def getMassProperties(triangles):
-    mass = vtk.vtkMassProperties()
-    mass.SetInputConnection(triangles.GetOutputPort())
-    
-    return mass.GetVolume(), mass.GetSurfaceArea()
-    
-def dataCleanup(surface):
-    clean_data = vtk.vtkCleanPolyData()
-    clean_data.SetInputConnection(surface.GetOutputPort())
-    
-    return clean_data
-    
-def createGeometry(surface):
     mapper = vtk.vtkPolyDataMapper()
-    mapper.SetInputConnection(surface.GetOutputPort())
-    
+    mapper.SetInputConnection(isoSurface.GetOutputPort())
+
     actor = vtk.vtkActor()
     actor.SetMapper(mapper)
-    
+
     return actor
-    
-def triangulateData(surface):
-    triangles = vtk.vtkTriangleFilter()
-    triangles.SetInputConnection(surface.GetOutputPort())
-    
-    return triangles
-    
-def runVisualization(actor):
+
+def runVisualization(reader, actor):
     renderer = vtk.vtkRenderer()
     renderer.AddActor(actor)
+
+    h = Histogram(10, reader)
+    h.plotHistogram(renderer)
+
     renderer.SetBackground(1, 0.25, 0.25)
-    
+
     window = vtk.vtkRenderWindow()
     window.AddRenderer(renderer)
-    
+
     iren = vtk.vtkRenderWindowInteractor()
     iren.SetRenderWindow(window)
-    
+
     window.Render()
     iren.Start()
 
 def runMain():
     reader = loadData()
-    isoSurface = generateIsosurface(reader)
-    cleanSurface = dataCleanup(isoSurface)
-    triangSurface = triangulateData(cleanSurface)
-    actor = createGeometry(triangSurface)
-    
-    [volume, surface] = getMassProperties(cleanSurface)
-    
-    print "Volume:", volume
-    print "Surface:", surface
-    
-    runVisualization(actor)
-    
+    actor = createGeometry(reader, -750)
+    vol = Volume(reader)
+
+    print "Volume by voxel count: ", vol.getVolumeByVoxelCount(-750)
+    print "Volume by histogram integration: ", vol.getVolumeByHistIntegration(-750)
+    print "Volume by isosurface: ", vol.getVolumeByIsosurface(-750)
+
+    runVisualization(reader, actor)
+
 if __name__ == "__main__":
     runMain()
