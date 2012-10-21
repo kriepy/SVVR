@@ -10,23 +10,10 @@
 \maketitle
 
 \begin{abstract}
-<<<<<<< HEAD
 In this report we describe the pipeline for the visualization of the calcification in balanophyllia europea corals. We also analyze, using the tools provided by the VTK visualization framework, the effects on calcification for corals grown in two different types of environments: acidified and non-acidified water. The data we are provided is in the form of DICOM 2D slices and was acquired using a CT scanner. We build a pipeline in which the data of a batch of corals is separated, visualized and analyzed.
 \end{abstract}
 
 \section{Introduction}
-=======
-In this report we desribe the visualisation of the calcification in the coral balanophyllia europaea
-
-The data is in form of dicom and is gained with a CTscan. We build a pipeline in where the data of a batch corals is seperated, visualised and analysed.
-\end{abstract}
-
-\section{Introduction}
-what is given:\\
-2 batches a 10 corals that are scanned in a CT scanner, one batch normal, other in acified water\\
-data gives density value for each voxel\\
-with this data we want to visualise the calcification in the corals\\
->>>>>>> 861ae8f80517fc11be2e913c8ccad424da50d7e3
 
 \
 
@@ -69,33 +56,13 @@ Cropping the independent coral samples from the two batches in DICOM format is t
 
 \
 
-<<<<<<< HEAD
 Once the independent samples are cropped, we can analyze the effects that an acidified environment has on calcification by computing the \emph{density histogram}. The shape of the histogram can be used to infer the range of calcium carbonate density, but also its frequency. Several out-of-the-box tools such can be used for this purpose, such as ParaView\footnote{http://www.paraview.org/} or VolView\footnote{http://www.kitware.com/opensource/volview.html}.
-=======
-\subsection{Coral}
--some information about the coral:\\
-2 batches, acified water and not
-location??
-bleached corals, so they are dead
->>>>>>> 861ae8f80517fc11be2e913c8ccad424da50d7e3
 
 \
 
 A much more flexible approach to this is to use the open-source VTK\footnote{http://www.vtk.org/} visualization library and the Python\footnote{http://www.python.org/} scripting language. In our framework, we use the {\bf vtkXMLImageDataReader} class to read the contents of the VTI files and the 
 
 \
-
-<<<<<<< HEAD
-=======
-\section{The Rendering Pipeline}
->>>>>>> 861ae8f80517fc11be2e913c8ccad424da50d7e3
-first seperating the data, so that every coral can be shown alone\\
--which 
-
-then measuring the volume in 1 way, choose which\\
-getting the density 
-
-also give vtk pipeline
 
 \section{Evaluation of methods}
 volume estimation with cubes, surfaces and integrating the density histogram. They give similar results but are different to the measured volume. counting the voxels is computational to expensive with VTK.
